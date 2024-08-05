@@ -1,0 +1,79 @@
+
+class Solution
+{ //Function to return a list containing the bottom view of the given tree.int l
+    //finding out leftside and rightsie distance sing this varibles
+    int leftmost=0;
+    int rightmost=0;
+    
+    
+    
+    //This function is helping to findout the levels of tree
+    void getLevel(Node root,int pos){
+        if(root==null)return;
+        
+        getLevel(root.left,pos-1);
+        getLevel(root.right,pos+1);
+        
+        leftmost=Math.min(leftmost,pos);
+        rightmost=Math.max(rightmost,pos);
+    }
+    
+    
+    
+    class Pair{
+        Node node;
+        int level;
+        
+        Pair(Node node ,int level){
+            this.node=node;
+            this.level=level;
+        }
+    }
+    public ArrayList <Integer> bottomView(Node root)
+    {
+        // Code here
+        Deque<Pair>q=new ArrayDeque<>();
+        
+        ArrayList<ArrayList<Integer>>a=new ArrayList<>();
+        
+        getLevel(root,0);
+        
+        //findig out levels for creating how many integers are on same vertical level
+        int levels=(rightmost-leftmost)+1;
+        
+        //making 0 using leftost
+        int origin=-(leftmost);
+        
+        for(int i=0;i<levels;i++){
+            a.add(new ArrayList<>());
+        }
+        
+        q.add(new Pair(root,origin));
+        
+        while(q.size()>0){
+            int size=q.size();
+            while(size-->0){
+                Pair temp=q.remove();
+                a.get(temp.level).add(temp.node.data);
+                
+                if(temp.node.left!=null){
+                    q.add(new Pair(temp.node.left,temp.level-1));
+                }
+                
+                if(temp.node.right!=null){
+                    q.add(new Pair(temp.node.right,temp.level+1));
+                }
+            }
+        }
+        
+        ArrayList<Integer>ar=new ArrayList<>();
+        
+// adding last element in arraylist because it is opposite of vertical level approach
+        for(ArrayList<Integer> x:a){
+            if(x.size()>0){
+                ar.add(x.get(x.size()-1));
+            }
+        }
+        return ar;
+    }
+}

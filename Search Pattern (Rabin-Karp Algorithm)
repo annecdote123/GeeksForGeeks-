@@ -1,0 +1,37 @@
+class Solution {
+  int mod = 1e5;
+  public:
+    vector <int> search(string pat, string txt)
+    {
+        vector<int>ans;
+        int txtHash=0, patHash=0;
+        int n = txt.size();
+        int m = pat.size();
+
+        if (m > n) return ans;
+
+        // initial hash
+        for(int i = 0; i < m; i++)
+        {
+            txtHash = (txtHash + (txt[i]-'a')) % mod;
+            patHash = (patHash + (pat[i]-'a')) % mod;
+        }
+
+        if(txtHash == patHash && txt.substr(0, m) == pat)
+            ans.push_back(1);
+
+        for(int i = m, j = 0; i < n; i++, j++)
+        {
+            txtHash = (txtHash - (txt[j]-'a') + mod) % mod;
+            txtHash = (txtHash + (txt[i]-'a')) % mod;
+
+            if(txtHash == patHash)
+            {
+                if(txt.substr(j+1, m) == pat)
+                    ans.push_back(j + 2); // 1-based indexing
+            }
+        }
+
+        return ans;
+    }
+};
